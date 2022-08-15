@@ -89,6 +89,7 @@ function PacticipantGroup({ name }: { name: string }) {
                 return {
                     id: item.id,
                     text: item.name,
+                    disabled: true,
                 };
             });
         }
