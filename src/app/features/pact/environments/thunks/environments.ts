@@ -26,9 +26,18 @@ export const pactApiSlice = createApi({
                 };
             },
         }),
-        getPactDeployedOnEnvironment: builder.query({
+        getPactDeployedOnEnvironment: builder.query<DeployedApp[], string>({
             query: (environmentId) =>
                 `/environments/${environmentId}/deployed-versions/currently-deployed`,
+            transformResponse: (response: ResponseDeployedApps) => {
+                return response._embedded.deployedVersions.map((item) => {
+                    return {
+                        uuid: item.uuid,
+                        pacticipantName: item._embedded.pacticipant.name,
+                        version: item._embedded.version.number,
+                    };
+                });
+            },
         }),
     }),
 });
@@ -51,4 +60,28 @@ interface ResponseEmbeddedEnvironments {
 
 interface ResponseEnvironments {
     _embedded: ResponseEmbeddedEnvironments;
+}
+
+interface ResponseDeployedApps {
+    _embedded: {
+        deployedVersions: ResponseDeployedApp[];
+    };
+}
+
+interface ResponseDeployedApp {
+    uuid: string;
+    _embedded: {
+        pacticipant: {
+            name: string;
+        };
+        version: {
+            number: string;
+        };
+    };
+}
+
+export interface DeployedApp {
+    uuid: string;
+    pacticipantName: string;
+    version: string;
 }
