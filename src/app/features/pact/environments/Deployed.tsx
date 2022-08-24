@@ -1,14 +1,14 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { DeployedApp, useGetPactDeployedOnEnvironmentQuery } from './thunks/environments';
 
 export default function Deployed({ environmentId }: { environmentId: string }) {
@@ -42,7 +42,7 @@ function DeployedAppsView({ deployedApps }: { deployedApps: DeployedApp[] }) {
                 <TableHead>
                     <TableRow>
                         <TableCell align="left">Id</TableCell>
-                        <TableCell align="center">Name&nbsp;(g)</TableCell>
+                        <TableCell align="center">Name</TableCell>
                         <TableCell align="center">Version</TableCell>
                         <TableCell align="center">Link</TableCell>
                     </TableRow>
