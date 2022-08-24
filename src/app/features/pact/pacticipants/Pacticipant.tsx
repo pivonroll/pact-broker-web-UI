@@ -1,11 +1,23 @@
-import React, { useCallback } from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+import React, { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Canvas, EdgeData, NodeData } from 'reaflow';
 import {
     useGetPacticipantByNameQuery,
-    useGetPacticipantVersionsQuery,
-    PacticipantVersion,
     useGetPacticipantGroupQuery,
+    useGetPacticipantVersionsQuery,
 } from './pacticipantsApi';
 
 export default function Pacticipant() {
@@ -19,21 +31,64 @@ export default function Pacticipant() {
 }
 
 function PacticipantView({ name }: { name: string }) {
+    const [detailsExpanded, setDetailsExpanded] = useState(true);
     const { data: pacticipant, isError, isLoading, isSuccess } = useGetPacticipantByNameQuery(name);
     return (
         <div>
-            <div>Pacticipant</div>
+            <Typography>Pacticipant</Typography>
             {isError && <div>Error loading pacticipant</div>}
             {isLoading && <div>Loading pacticipant...</div>}
             {isSuccess && (
                 <div>
-                    <div>Name: {pacticipant.displayName}</div>
-                    <div>Main Branch: {pacticipant.mainBranch}</div>
-                    <div>Latest Version: {pacticipant.latestVersion}</div>
-                    <hr />
-                    <PacticipantVersions name={name} />
-                    <hr />
-                    <PacticipantGroup name={name} />
+                    <Box sx={{ pt: 0.5, pb: 0.5 }}>
+                        <Accordion
+                            expanded={detailsExpanded}
+                            onChange={() => {
+                                setDetailsExpanded(!detailsExpanded);
+                            }}
+                        >
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            >
+                                <Typography>Details</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Typography>Name: {pacticipant.displayName}</Typography>
+                                <Typography>Main Branch: {pacticipant.mainBranch}</Typography>
+                                <Typography>Latest Version: {pacticipant.latestVersion}</Typography>
+                            </AccordionDetails>
+                        </Accordion>
+                    </Box>
+                    <Box sx={{ pt: 0.5, pb: 0.5 }}>
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            >
+                                <Typography>Versions</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <PacticipantVersions name={name} />
+                            </AccordionDetails>
+                        </Accordion>
+                    </Box>
+                    <Box sx={{ pt: 0.5, pb: 1 }}>
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            >
+                                <Typography>Group</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <PacticipantGroup name={name} />
+                            </AccordionDetails>
+                        </Accordion>
+                    </Box>
                 </div>
             )}
         </div>
@@ -45,17 +100,29 @@ function PacticipantVersions({ name }: { name: string }) {
 
     const renderVersions = useCallback(() => {
         if (versions !== undefined) {
-            return versions.map((item, index, array) => {
-                return (
-                    <div key={item.versionNumber}>
-                        <PacticipantVersionView
-                            versionNumber={item.versionNumber}
-                            createdAt={item.createdAt}
-                        />
-                        {index !== array.length - 1 && <hr />}
-                    </div>
-                );
-            });
+            return (
+                <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="left">Version Number</TableCell>
+                                <TableCell align="center">Created At</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {versions.map((row) => (
+                                <TableRow
+                                    key={row.versionNumber}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell align="left">{row.versionNumber}</TableCell>
+                                    <TableCell align="center">{row.createdAt}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            );
         }
 
         return null;
@@ -63,19 +130,9 @@ function PacticipantVersions({ name }: { name: string }) {
 
     return (
         <div>
-            <div>Versions</div>
             {isError && <div>Error loading pacticipant versions</div>}
             {isLoading && <div>Loading pacticipant versions...</div>}
             {isSuccess && <div>{renderVersions()}</div>}
-        </div>
-    );
-}
-
-function PacticipantVersionView({ versionNumber, createdAt }: Partial<PacticipantVersion>) {
-    return (
-        <div>
-            <div>Number: {versionNumber}</div>
-            <div>CreatedAt: {createdAt}</div>
         </div>
     );
 }
@@ -117,13 +174,11 @@ function PacticipantGroup({ name }: { name: string }) {
 
     return (
         <div>
-            <div>Group</div>
             {isError && <div>Error loading pacticipant group</div>}
             {isLoading && <div>Loading pacticipant group...</div>}
-            {isSuccess && <div>Loaded Group</div>}
             <Canvas
                 maxWidth={800}
-                maxHeight={600}
+                maxHeight={400}
                 nodes={constructNodes()}
                 edges={constructEdges()}
             />
