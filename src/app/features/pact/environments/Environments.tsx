@@ -33,7 +33,6 @@ function EnvironmentsView({ environments }: { environments: ResponseEnvironment[
                 <TableHead>
                     <TableRow>
                         <TableCell align="left">Name</TableCell>
-                        <TableCell align="center">Link</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -42,10 +41,9 @@ function EnvironmentsView({ environments }: { environments: ResponseEnvironment[
                             key={row.uuid}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            <TableCell align="left">{row.displayName}</TableCell>
-                            <TableCell align="center">
+                            <TableCell align="left">
                                 <Link component={RouterLink} to={`/environments/${row.uuid}`}>
-                                    Go
+                                    {row.displayName}
                                 </Link>
                             </TableCell>
                         </TableRow>

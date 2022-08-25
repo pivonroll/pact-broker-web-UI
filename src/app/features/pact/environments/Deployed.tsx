@@ -41,10 +41,8 @@ function DeployedAppsView({ deployedApps }: { deployedApps: DeployedApp[] }) {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell align="left">Id</TableCell>
-                        <TableCell align="center">Name</TableCell>
+                        <TableCell align="left">Name</TableCell>
                         <TableCell align="center">Version</TableCell>
-                        <TableCell align="center">Link</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -53,17 +51,15 @@ function DeployedAppsView({ deployedApps }: { deployedApps: DeployedApp[] }) {
                             key={row.uuid}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            <TableCell align="left">{row.uuid}</TableCell>
-                            <TableCell align="center">{row.pacticipantName}</TableCell>
-                            <TableCell align="center">{row.version}</TableCell>
-                            <TableCell align="center">
+                            <TableCell align="left">
                                 <Link
                                     component={RouterLink}
                                     to={`/pacticipants/${row.pacticipantName}`}
                                 >
-                                    Go
+                                    {row.pacticipantName}
                                 </Link>
                             </TableCell>
+                            <TableCell align="center">{row.version}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
