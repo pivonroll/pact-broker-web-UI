@@ -6,6 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Pacticipant, useGetPacticipantsQuery } from './pacticipantsApi';
@@ -15,7 +16,7 @@ export default function Pacticipants() {
 
     return (
         <div>
-            <div>Pacticipants</div>
+            <Typography sx={{ pb: 2 }}>Pacticipants</Typography>
             {isError && <div>Error loading pacticipants</div>}
             {isLoading && <div>Loading pacticipants...</div>}
             {isSuccess && pacticipants !== undefined && (
@@ -34,7 +35,6 @@ function PacticipantsView({ pacticipants }: { pacticipants: Pacticipant[] }) {
                         <TableCell align="left">Name</TableCell>
                         <TableCell align="center">Main Branch</TableCell>
                         <TableCell align="center">Latest Version</TableCell>
-                        <TableCell align="center">Link</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -43,14 +43,13 @@ function PacticipantsView({ pacticipants }: { pacticipants: Pacticipant[] }) {
                             key={row.name}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            <TableCell align="left">{row.displayName}</TableCell>
-                            <TableCell align="center">{row.mainBranch}</TableCell>
-                            <TableCell align="center">{row.latestVersion ?? ''}</TableCell>
-                            <TableCell align="center">
+                            <TableCell align="left">
                                 <Link component={RouterLink} to={`/pacticipants/${row.name}`}>
-                                    Go
+                                    {row.displayName}
                                 </Link>
                             </TableCell>
+                            <TableCell align="center">{row.mainBranch}</TableCell>
+                            <TableCell align="center">{row.latestVersion ?? ''}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
