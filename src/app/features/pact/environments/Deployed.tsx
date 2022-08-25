@@ -25,7 +25,7 @@ export default function Deployed({ environmentId }: { environmentId: string }) {
             {isLoading && <div>Loading deployed...</div>}
             {isSuccess && deployedApps !== undefined && (
                 <div>
-                    <Typography variant="h5" gutterBottom>
+                    <Typography variant="h6" gutterBottom>
                         Deployed Applications
                     </Typography>
                     <DeployedAppsView deployedApps={deployedApps} />

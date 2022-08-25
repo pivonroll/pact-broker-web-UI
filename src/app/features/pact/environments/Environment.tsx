@@ -1,8 +1,8 @@
+import Typography from '@mui/material/Typography';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import Typography from '@mui/material/Typography';
-import { useGetPactEnvironmentQuery } from './thunks/environments';
 import Deployed from './Deployed';
+import { useGetPactEnvironmentQuery } from './thunks/environments';
 
 export default function Environment() {
     const { environmentId } = useParams();
@@ -23,11 +23,9 @@ function EnvironmentDisplay({ id }: { id: string }) {
             {isError && <div>Error loading environment {id}</div>}
             {isLoading && <div>Loading {id}</div>}
             {isSuccess && environment !== undefined && (
-                <div>
-                    <Typography variant="h4" gutterBottom>
-                        {environment.displayName}
-                    </Typography>
-                </div>
+                <Typography pb={4} variant="h4" gutterBottom>
+                    {environment.displayName}
+                </Typography>
             )}
             <Deployed environmentId={id}></Deployed>
         </div>
