@@ -16,7 +16,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { ReactElement, useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Graph from '../graph_example/example';
 import Environment from '../pact/environments/Environment';
 import Environments from '../pact/environments/Environments';
@@ -49,6 +49,7 @@ export default function Dashboard() {
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up('sm'));
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -60,7 +61,11 @@ export default function Dashboard() {
             <Divider />
             <List>
                 {menuItems.map((item, index) => (
-                    <ListItem key={item.displayText} disablePadding>
+                    <ListItem
+                        key={item.displayText}
+                        disablePadding
+                        selected={location.pathname.startsWith(item.path)}
+                    >
                         <ListItemButton
                             onClick={() => {
                                 navigate(item.path);
