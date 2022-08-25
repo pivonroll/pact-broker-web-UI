@@ -1,6 +1,5 @@
-import MailIcon from '@mui/icons-material/Mail';
+import { BlurOn, GridView } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,7 +15,7 @@ import { useTheme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Graph from '../graph_example/example';
 import Environment from '../pact/environments/Environment';
@@ -29,28 +28,23 @@ const drawerWidth = 240;
 interface MenuItem {
     displayText: string;
     path: string;
+    icon: ReactElement;
 }
 
 const menuItems: MenuItem[] = [
     {
         displayText: 'Environments',
         path: '/environments',
+        icon: <GridView />,
     },
     {
         displayText: 'Pacticipants',
         path: '/pacticipants',
-    },
-    {
-        displayText: 'Graph',
-        path: '/graph',
-    },
-    {
-        displayText: 'Dashboard',
-        path: '/dashboard',
+        icon: <BlurOn />,
     },
 ];
 
-export default function ResponsiveDrawer() {
+export default function Dashboard() {
     const [mobileOpen, setMobileOpen] = useState(false);
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -72,9 +66,7 @@ export default function ResponsiveDrawer() {
                                 navigate(item.path);
                             }}
                         >
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
+                            <ListItemIcon>{item.icon}</ListItemIcon>
                             <ListItemText primary={item.displayText} />
                         </ListItemButton>
                     </ListItem>
@@ -107,7 +99,7 @@ export default function ResponsiveDrawer() {
                     )}
 
                     <Typography variant="h6" noWrap component="div">
-                        Responsive drawer
+                        Pact Broker
                     </Typography>
                 </Toolbar>
             </AppBar>
