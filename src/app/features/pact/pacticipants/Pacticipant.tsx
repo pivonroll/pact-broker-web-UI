@@ -35,7 +35,7 @@ function PacticipantView({ name }: { name: string }) {
     const { data: pacticipant, isError, isLoading, isSuccess } = useGetPacticipantByNameQuery(name);
     return (
         <div>
-            <Typography>Pacticipant</Typography>
+            <Typography sx={{ pb: 2 }}>Pacticipant</Typography>
             {isError && <div>Error loading pacticipant</div>}
             {isLoading && <div>Loading pacticipant...</div>}
             {isSuccess && (
