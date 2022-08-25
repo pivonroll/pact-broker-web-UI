@@ -16,7 +16,9 @@ export default function Environments() {
 
     return (
         <div>
-            <Typography sx={{ pb: 2 }}>Environments</Typography>
+            <Typography variant="h5" sx={{ pb: 4 }}>
+                Environments
+            </Typography>
             {isError && <div>Error while loading environments</div>}
             {isLoading && <div>Loading environments...</div>}
             {isSuccess && environments !== undefined && (
