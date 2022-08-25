@@ -1,5 +1,7 @@
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -7,6 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
+import { default as Grid } from '@mui/material/Unstable_Grid2'; // Grid version 2import Paper from '@mui/material/Paper';
 import { format } from 'date-fns';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -26,6 +29,14 @@ export default function Pacticipant() {
         </div>
     );
 }
+
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+}));
 
 function PacticipantView({ name }: { name: string }) {
     const { data: pacticipant, isError, isLoading, isSuccess } = useGetPacticipantByNameQuery(name);
@@ -47,10 +58,30 @@ function PacticipantView({ name }: { name: string }) {
                         <Typography pb={4} variant="subtitle1" sx={{ fontWeight: 'bold' }}>
                             {pacticipant.latestVersion}
                         </Typography>
-                        <Box pb={2}>
+                        <Box pb={4}>
                             <PacticipantVersions name={name} />
                         </Box>
-                        <Box pb={2}>
+                        <Divider />
+                        <Box pt={4} pb={4}>
+                            <Typography pb={2} variant="subtitle1">
+                                Labels
+                            </Typography>
+                            {pacticipant.labels.length === 0 && (
+                                <Typography>No labels assigned for pacticipant</Typography>
+                            )}
+                            {pacticipant.labels.length !== 0 && (
+                                <Grid container spacing={2}>
+                                    {pacticipant.labels.map((row) => (
+                                        <Grid key={row} xs={2}>
+                                            <Item>{row}</Item>
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            )}
+                        </Box>
+                        <Divider />
+                        <Box pt={4} pb={2}>
+                            <Typography pb={2}>Dependency Graph</Typography>
                             <PacticipantGroup name={name} />
                         </Box>
                     </Box>
