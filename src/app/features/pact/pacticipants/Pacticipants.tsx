@@ -6,7 +6,6 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Pacticipant, useGetPacticipantsQuery } from './pacticipantsApi';
@@ -16,7 +15,6 @@ export default function Pacticipants() {
 
     return (
         <div>
-            <Typography sx={{ pb: 2 }}>Pacticipants</Typography>
             {isError && <div>Error loading pacticipants</div>}
             {isLoading && <div>Loading pacticipants...</div>}
             {isSuccess && pacticipants !== undefined && (

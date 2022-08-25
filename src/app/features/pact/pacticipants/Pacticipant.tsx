@@ -1,7 +1,3 @@
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -11,7 +7,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import React, { useCallback, useState } from 'react';
+import { format } from 'date-fns';
+import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Canvas, EdgeData, NodeData } from 'reaflow';
 import {
@@ -31,63 +28,31 @@ export default function Pacticipant() {
 }
 
 function PacticipantView({ name }: { name: string }) {
-    const [detailsExpanded, setDetailsExpanded] = useState(true);
     const { data: pacticipant, isError, isLoading, isSuccess } = useGetPacticipantByNameQuery(name);
     return (
         <div>
-            <Typography sx={{ pb: 2 }}>Pacticipant</Typography>
             {isError && <div>Error loading pacticipant</div>}
             {isLoading && <div>Loading pacticipant...</div>}
             {isSuccess && (
                 <div>
                     <Box sx={{ pt: 0.5, pb: 0.5 }}>
-                        <Accordion
-                            expanded={detailsExpanded}
-                            onChange={() => {
-                                setDetailsExpanded(!detailsExpanded);
-                            }}
-                        >
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography>Details</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography>Name: {pacticipant.displayName}</Typography>
-                                <Typography>Main Branch: {pacticipant.mainBranch}</Typography>
-                                <Typography>Latest Version: {pacticipant.latestVersion}</Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                    </Box>
-                    <Box sx={{ pt: 0.5, pb: 0.5 }}>
-                        <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography>Versions</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <PacticipantVersions name={name} />
-                            </AccordionDetails>
-                        </Accordion>
-                    </Box>
-                    <Box sx={{ pt: 0.5, pb: 1 }}>
-                        <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography>Group</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <PacticipantGroup name={name} />
-                            </AccordionDetails>
-                        </Accordion>
+                        <Typography pb={4} variant="h5" sx={{ fontWeight: 'bold' }}>
+                            {pacticipant.displayName}
+                        </Typography>
+                        <Typography>Main Branch</Typography>
+                        <Typography pb={2} variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                            {pacticipant.mainBranch || 'N/A'}
+                        </Typography>
+                        <Typography>Latest Version</Typography>
+                        <Typography pb={4} variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                            {pacticipant.latestVersion}
+                        </Typography>
+                        <Box pb={2}>
+                            <PacticipantVersions name={name} />
+                        </Box>
+                        <Box pb={2}>
+                            <PacticipantGroup name={name} />
+                        </Box>
                     </Box>
                 </div>
             )}
@@ -98,7 +63,7 @@ function PacticipantView({ name }: { name: string }) {
 function PacticipantVersions({ name }: { name: string }) {
     const { data: versions, isError, isLoading, isSuccess } = useGetPacticipantVersionsQuery(name);
 
-    const renderVersions = useCallback(() => {
+    const versionsView = useMemo(() => {
         if (versions !== undefined) {
             return (
                 <TableContainer component={Paper}>
@@ -116,7 +81,9 @@ function PacticipantVersions({ name }: { name: string }) {
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <TableCell align="left">{row.versionNumber}</TableCell>
-                                    <TableCell align="center">{row.createdAt}</TableCell>
+                                    <TableCell align="center">
+                                        {format(new Date(row.createdAt), 'yyyy-MM-dd HH:mm')}
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -132,15 +99,15 @@ function PacticipantVersions({ name }: { name: string }) {
         <div>
             {isError && <div>Error loading pacticipant versions</div>}
             {isLoading && <div>Loading pacticipant versions...</div>}
-            {isSuccess && <div>{renderVersions()}</div>}
+            {isSuccess && <div>{versionsView}</div>}
         </div>
     );
 }
 
 function PacticipantGroup({ name }: { name: string }) {
-    const { data: group, isError, isLoading, isSuccess, error } = useGetPacticipantGroupQuery(name);
+    const { data: group, isError, isLoading } = useGetPacticipantGroupQuery(name);
 
-    const constructNodes = useCallback((): NodeData[] => {
+    const nodes = useMemo((): NodeData[] => {
         if (group !== undefined) {
             return group.map((item) => {
                 return {
@@ -154,7 +121,7 @@ function PacticipantGroup({ name }: { name: string }) {
         return [];
     }, [group]);
 
-    const constructEdges = useCallback((): EdgeData[] => {
+    const edges = useMemo((): EdgeData[] => {
         if (group !== undefined) {
             const edges: EdgeData[] = [];
             group.forEach((item) => {
@@ -164,6 +131,12 @@ function PacticipantGroup({ name }: { name: string }) {
                         from: item.id,
                         to: item.target,
                     });
+                    // just to demonstrate cyclic dependency
+                    // edges.push({
+                    //     id: item.id + '-' + item.target + '1',
+                    //     from: item.target,
+                    //     to: item.id,
+                    // });
                 }
             });
             return edges;
@@ -176,12 +149,7 @@ function PacticipantGroup({ name }: { name: string }) {
         <div>
             {isError && <div>Error loading pacticipant group</div>}
             {isLoading && <div>Loading pacticipant group...</div>}
-            <Canvas
-                maxWidth={800}
-                maxHeight={400}
-                nodes={constructNodes()}
-                edges={constructEdges()}
-            />
+            <Canvas maxWidth={800} maxHeight={400} nodes={nodes} edges={edges} />
         </div>
     );
 }
