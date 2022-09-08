@@ -1,4 +1,5 @@
 import { BlurOn, GridView } from '@mui/icons-material';
+import HiveIcon from '@mui/icons-material/Hive';
 import MenuIcon from '@mui/icons-material/Menu';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -18,6 +19,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { ReactElement, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Graph from '../graph_example/example';
+import { CanIDeploy } from '../pact/can_i_deploy/CanIDeploy';
+import { PactResult } from '../pact/can_i_deploy/PactResult';
 import Environment from '../pact/environments/Environment';
 import Environments from '../pact/environments/Environments';
 import Pacticipant from '../pact/pacticipants/Pacticipant';
@@ -41,6 +44,11 @@ const menuItems: MenuItem[] = [
         displayText: 'Pacticipants',
         path: '/pacticipants',
         icon: <BlurOn />,
+    },
+    {
+        displayText: 'Can I Deploy',
+        path: '/can-i-deploy',
+        icon: <HiveIcon />,
     },
 ];
 
@@ -152,6 +160,13 @@ export default function Dashboard() {
                     <Route path="pacticipants">
                         <Route path="" element={<Pacticipants />}></Route>
                         <Route path=":pacticipantName" element={<Pacticipant />}></Route>
+                    </Route>
+                    <Route path="can-i-deploy">
+                        <Route path="" element={<CanIDeploy />} />
+                        <Route
+                            path="consumer/:consumer/provider/:provider/pact/:pact/metadata/:metadata"
+                            element={<PactResult />}
+                        ></Route>
                     </Route>
                     <Route path="graph" element={<Graph></Graph>}></Route>
                     <Route path="dashboard" element={<div></div>}></Route>

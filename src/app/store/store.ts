@@ -1,8 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
-import pactReducer from '../features/pact/pactSlice';
 import { pactApiSlice } from '../features/pact/environments/thunks/environments';
 import { pacticipantsApi } from '../features/pact/pacticipants/pacticipantsApi';
+import pactReducer from '../features/pact/pactSlice';
+import { canIDeployApi } from './../features/pact/can_i_deploy/canIDeployApi';
 
 const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
         pact: pactReducer,
         [pactApiSlice.reducerPath]: pactApiSlice.reducer,
         [pacticipantsApi.reducerPath]: pacticipantsApi.reducer,
+        [canIDeployApi.reducerPath]: canIDeployApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(pactApiSlice.middleware).concat(pacticipantsApi.middleware),
