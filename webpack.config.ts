@@ -1,7 +1,7 @@
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 import * as path from 'path';
 import * as webpack from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 const deps = require('./package.json').dependencies;
 
 const ModuleFederationPlugin = webpack.container.ModuleFederationPlugin;
@@ -9,6 +9,9 @@ const ModuleFederationPlugin = webpack.container.ModuleFederationPlugin;
 import 'webpack-dev-server';
 
 const config: webpack.Configuration = {
+    experiments: {
+        topLevelAwait: true,
+    },
     mode: 'development',
     target: 'web',
     devServer: {
