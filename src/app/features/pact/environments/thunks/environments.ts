@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const pactApiSlice = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
+    tagTypes: ['Environment'],
     endpoints: (builder) => ({
         getPactEnvironments: builder.query<ResponseEnvironment[], unknown>({
             query: () => '/environments',
@@ -15,6 +16,13 @@ export const pactApiSlice = createApi({
                     };
                 });
             },
+            providesTags: (result) =>
+                result
+                    ? [
+                          ...result.map(({ uuid }) => ({ type: 'Environment' as const, id: uuid })),
+                          { type: 'Environment', id: 'LIST' },
+                      ]
+                    : [{ type: 'Environment', id: 'LIST' }],
         }),
         getPactEnvironment: builder.query<ResponseEnvironment, string>({
             query: (environmentId) => `/environments/${environmentId}`,
@@ -25,6 +33,7 @@ export const pactApiSlice = createApi({
                     displayName: response.displayName,
                 };
             },
+            providesTags: (result, error, id) => [{ type: 'Environment', id }],
         }),
         getPactDeployedOnEnvironment: builder.query<DeployedApp[], string>({
             query: (environmentId) =>
@@ -59,6 +68,18 @@ export const pactApiSlice = createApi({
                     createdAt: response.createdAt,
                 };
             },
+            invalidatesTags: [{ type: 'Environment', id: 'LIST' }],
+        }),
+        deleteEnvironment: builder.mutation<any, string>({
+            query: (environmentsId) => {
+                return {
+                    method: 'DELETE',
+                    url: `/environments/${environmentsId}`,
+                };
+            },
+            invalidatesTags: (result, error, environmentsId) => [
+                { type: 'Environment', environmentsId },
+            ],
         }),
     }),
 });
@@ -86,6 +107,7 @@ export interface CreateEnvironmentResponse {
 
 export const {
     useCreateEnvironmentMutation,
+    useDeleteEnvironmentMutation,
     useGetPactEnvironmentsQuery,
     useGetPactEnvironmentQuery,
     useGetPactDeployedOnEnvironmentQuery,
