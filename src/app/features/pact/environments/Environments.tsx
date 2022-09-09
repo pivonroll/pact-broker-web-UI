@@ -1,21 +1,32 @@
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
+import {
+    Button,
+    Link,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography,
+} from '@mui/material';
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { ResponseEnvironment, useGetPactEnvironmentsQuery } from './thunks/environments';
 
 export default function Environments() {
+    const navigate = useNavigate();
     const { data: environments, isError, isLoading, isSuccess } = useGetPactEnvironmentsQuery('');
 
     return (
         <div>
+            <Button
+                sx={{ marginBottom: 2 }}
+                variant="contained"
+                onClick={() => navigate('/environments/create-new')}
+            >
+                New Environment
+            </Button>
             <Typography variant="h5" sx={{ pb: 4 }}>
                 Environments
             </Typography>

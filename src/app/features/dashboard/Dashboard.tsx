@@ -23,6 +23,7 @@ import { CanIDeploy } from '../pact/can_i_deploy/CanIDeploy';
 import { PactResult } from '../pact/can_i_deploy/PactResult';
 import Environment from '../pact/environments/Environment';
 import Environments from '../pact/environments/Environments';
+import { CreateNewEnvironment } from '../pact/environments/NewEnvironment';
 import Pacticipant from '../pact/pacticipants/Pacticipant';
 import Pacticipants from '../pact/pacticipants/Pacticipants';
 
@@ -156,6 +157,7 @@ export default function Dashboard() {
                     <Route path="environments">
                         <Route path="" element={<Environments />}></Route>
                         <Route path=":environmentId" element={<Environment />}></Route>
+                        <Route path="create-new" element={<CreateNewEnvironment />}></Route>
                     </Route>
                     <Route path="pacticipants">
                         <Route path="" element={<Pacticipants />}></Route>

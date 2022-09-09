@@ -39,10 +39,53 @@ export const pactApiSlice = createApi({
                 });
             },
         }),
+        createEnvironment: builder.mutation<CreateEnvironment, CreateEnvironmentRequest>({
+            query: (request) => {
+                return {
+                    method: 'POST',
+                    url: '/environments',
+                    body: {
+                        name: request.name,
+                        production: request.isProduction,
+                    },
+                };
+            },
+            transformResponse: (response: CreateEnvironmentResponse) => {
+                return {
+                    uuid: response.uuid,
+                    name: response.name,
+                    displayName: response.displayName,
+                    production: response.production,
+                    createdAt: response.createdAt,
+                };
+            },
+        }),
     }),
 });
 
+export interface CreateEnvironmentRequest {
+    name: string;
+    isProduction: boolean;
+}
+
+export interface CreateEnvironment {
+    uuid: string;
+    name: string;
+    displayName: string;
+    production: boolean;
+    createdAt: string;
+}
+
+export interface CreateEnvironmentResponse {
+    uuid: string;
+    name: string;
+    displayName: string;
+    production: boolean;
+    createdAt: string;
+}
+
 export const {
+    useCreateEnvironmentMutation,
     useGetPactEnvironmentsQuery,
     useGetPactEnvironmentQuery,
     useGetPactDeployedOnEnvironmentQuery,
