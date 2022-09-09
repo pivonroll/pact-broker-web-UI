@@ -1,4 +1,4 @@
-import { Button, Stack, TextField } from '@mui/material';
+import { Alert, Button, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import React, { useCallback, useState } from 'react';
@@ -49,9 +49,13 @@ export function CreateNewEnvironment() {
                 <Button variant="contained" sx={{ maxWidth: '15%' }} onClick={handleAddPost}>
                     Create
                 </Button>
-                {isLoading && <div>Creating {name}</div>}
-                {isError && <div>Error creating {name}</div>}
+                {isLoading && <Typography>Creating {name}</Typography>}
             </Stack>
+            <Snackbar open={isError} autoHideDuration={6000}>
+                <Alert variant="filled" severity="error" sx={{ width: '100%' }}>
+                    `Failed to create ${name}`
+                </Alert>
+            </Snackbar>
         </div>
     );
 }
