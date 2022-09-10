@@ -5,6 +5,7 @@ import * as webpack from 'webpack';
 const deps = require('./package.json').dependencies;
 
 const ModuleFederationPlugin = webpack.container.ModuleFederationPlugin;
+const CompressionPlugin = require('compression-webpack-plugin');
 
 import 'webpack-dev-server';
 
@@ -41,6 +42,7 @@ const config: webpack.Configuration = {
         ],
     },
     plugins: [
+        new CompressionPlugin(),
         new CleanWebpackPlugin(),
         new ModuleFederationPlugin({
             name: 'host',

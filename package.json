@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-cli serve",
-    "build": "TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack --mode production",
+    "build": "TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -p --mode production",
     "serve": "serve dist -p 3000",
     "clean": "rm -rf dist",
-    "build-w": "TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack",
+    "build:dev": "TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack",
     "dev": "TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack serve --open --hot"
   },
   "author": "Radovan Zivkovic",
@@ -33,6 +33,7 @@
     "babel-loader": "^8.2.4",
     "babel-plugin-typescript-strip-namespaces": "^1.1.1",
     "clean-webpack-plugin": "^4.0.0",
+    "compression-webpack-plugin": "^10.0.0",
     "date-fns": "^2.29.2",
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
