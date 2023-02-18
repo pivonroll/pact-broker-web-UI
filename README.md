@@ -16,12 +16,12 @@ docker network create pact-network
 ### Start pact broker container
 If you are on amd64 platform:
 ```shell
-    docker run --name pact-broker --network pact-network -p 9292:9292 -d dius/pact-broker
+    docker run -e PACT_BROKER_DATABASE_ADAPTER=sqlite -e PACT_BROKER_DATABASE_NAME=my_db --name pact-broker --network pact-network -p 9292:9292 -d pactfoundation/pact-broker
 ```
 
 If you are on arm64 or aarch64 platform:
 ```shell
-docker run --name pact-broker --network pact-network -p 9292:9292 --platform linux/amd64 -d dius/pact-broker
+docker run -e PACT_BROKER_DATABASE_ADAPTER=sqlite -e PACT_BROKER_DATABASE_NAME=my_db --name pact-broker --network pact-network -p 9292:9292 --platform linux/amd64 -d pactfoundation/pact-broker
 ```
 
 ### Start NGINX reverse proxy in docker container
@@ -31,7 +31,7 @@ That is why we are using NGINX reverse proxy to forward requests from localhost:
 </br>
 Go into the config/nginx directory and run:
 ```shell
-docker run --network=pact-network -p 5000:5000 --name pact-broker-proxy -v $PWD/nginx.conf:/etc/nginx/nginx.conf:ro -d nginx
+docker run --network=pact-network -p 5050:5000 --name pact-broker-proxy -v $PWD/nginx.conf:/etc/nginx/nginx.conf:ro -d nginx
 ```
 
 ### Start GUI server
@@ -50,5 +50,5 @@ docker build -f config/docker/Dockerfile . -t pact-broker-gui
 
 ### Run docker image
 ```shell
-docker run --network pact-network -p 5000:5000 -d pact-broker-gui
+docker run --network pact-network -p 5050:3000 -d pact-broker-gui
 ```

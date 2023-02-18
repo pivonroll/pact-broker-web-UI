@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { baseUrl } from '../../../../../endpoints';
 
 export const pactApiSlice = createApi({
     reducerPath: 'api',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
+    baseQuery: fetchBaseQuery({ baseUrl }),
     tagTypes: ['Environment'],
     endpoints: (builder) => ({
         getPactEnvironments: builder.query<ResponseEnvironment[], unknown>({

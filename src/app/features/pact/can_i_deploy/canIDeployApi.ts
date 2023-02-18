@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { baseUrl } from '../../../../endpoints';
 
 export const canIDeployApi = createApi({
     reducerPath: 'canIDeploy',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
+    baseQuery: fetchBaseQuery({ baseUrl }),
     endpoints: (builder) => ({
         canIDeploy: builder.query<CanIDeploy, CanIDeployRequest>({
             query: (request) =>
