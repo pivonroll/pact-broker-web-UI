@@ -70,15 +70,12 @@ export default function Dashboard() {
             <Divider />
             <List>
                 {menuItems.map((item, index) => (
-                    <ListItem
-                        key={item.displayText}
-                        disablePadding
-                        selected={location.pathname.startsWith(item.path)}
-                    >
+                    <ListItem key={item.displayText} disablePadding>
                         <ListItemButton
                             onClick={() => {
                                 navigate(item.path);
                             }}
+                            selected={location.pathname.startsWith(item.path)}
                         >
                             <ListItemIcon>{item.icon}</ListItemIcon>
                             <ListItemText primary={item.displayText} />
