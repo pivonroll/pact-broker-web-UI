@@ -14,8 +14,14 @@ This step is required because default bridge network does not have DNS capabilit
 docker network create pact-network
 ```
 ### Start pact broker container
+If you are on amd64 platform:
 ```shell
-    docker run --name pact-broker --network pact-network -p 9292:9292 -d pact-broker
+    docker run --name pact-broker --network pact-network -p 9292:9292 -d dius/pact-broker
+```
+
+If you are on arm64 or aarch64 platform:
+```shell
+docker run --name pact-broker --network pact-network -p 9292:9292 --platform linux/amd64 -d dius/pact-broker
 ```
 
 ### Start NGINX reverse proxy in docker container
